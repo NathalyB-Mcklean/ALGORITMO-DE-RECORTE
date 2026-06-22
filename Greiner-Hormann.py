@@ -2,9 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib.widgets import Button
 
 
-# ---------------------------------------------------------------
 # 1. Estructura de datos: vertice de una lista doblemente enlazada
-# ---------------------------------------------------------------
 class Vertex:
     def __init__(self, x, y, intersect=False, entry=True, alpha=0.0):
         self.x = x
@@ -71,9 +69,7 @@ class Polygon:
                 return None
 
 
-# ---------------------------------------------------------------
 # 2. Funciones geometricas auxiliares
-# ---------------------------------------------------------------
 def cross(o, a, b):
     return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
 
@@ -106,9 +102,7 @@ def point_in_polygon(point, poly_points):
     return inside
 
 
-# ---------------------------------------------------------------
 # 3. Fase 1: busqueda e insercion de intersecciones
-# ---------------------------------------------------------------
 def phase_one(subject, clip):
     s_points = subject.points()
     c_points = clip.points()
@@ -149,9 +143,7 @@ def phase_one(subject, clip):
     return any_intersection
 
 
-# ---------------------------------------------------------------
 # 4. Fase 2: marcado entry/exit
-# ---------------------------------------------------------------
 def phase_two(poly, other_points):
     start = poly.first
     inside = point_in_polygon(start.point(), other_points)
@@ -169,9 +161,7 @@ def phase_two(poly, other_points):
             break
 
 
-# ---------------------------------------------------------------
 # 5. Fase 3: construccion de los poligonos resultado
-# ---------------------------------------------------------------
 def phase_three(subject):
     result_polygons = []
 
@@ -217,9 +207,7 @@ def phase_three(subject):
     return result_polygons
 
 
-# ---------------------------------------------------------------
 # 6. Funcion principal: recorte (interseccion) de dos poligonos
-# ---------------------------------------------------------------
 def greiner_hormann_clip(subject_pts, clip_pts):
     subject = Polygon()
     for x, y in subject_pts:
@@ -249,9 +237,7 @@ def cerrar(p):
     return p + [p[0]] if len(p) > 1 else p
 
 
-# ---------------------------------------------------------------
 # 7. Ejemplos predefinidos
-# ---------------------------------------------------------------
 EJEMPLOS = {
     1: ("Dos cuadrados solapados",
         [(0, 0), (4, 0), (4, 4), (0, 4)],
@@ -269,9 +255,7 @@ EJEMPLOS = {
 }
 
 
-# ---------------------------------------------------------------
-# 8. Aplicacion interactiva (todo dentro de una ventana matplotlib)
-# ---------------------------------------------------------------
+# 8. Ventana principal
 class DemoGreinerHormann:
     def __init__(self):
         self.subject_pts = []
@@ -301,7 +285,7 @@ class DemoGreinerHormann:
 
         self.fig.canvas.mpl_connect('button_press_event', self._on_click)
 
-    # ---------------- Construccion de la interfaz ----------------
+    # Construccion de la interfaz 
     def _crear_botones(self):
         left = 0.68
         width = 0.27
@@ -338,7 +322,7 @@ class DemoGreinerHormann:
         self.status.set_text(msg)
         self.fig.canvas.draw_idle()
 
-    # ---------------- Acciones de los botones ----------------
+    #  Acciones de los botones 
     def _cargar_ejemplo(self, num):
         nombre, s, c = EJEMPLOS[num]
         self.subject_pts = list(s)
@@ -377,7 +361,7 @@ class DemoGreinerHormann:
         titulo = titulo or "Resultado del recorte"
         if self.resultado:
             self._set_status(f"{titulo}: se genero {len(self.resultado)} "
-                              f"poligono(s) resultado (area verde).")
+                              f"poligono(s) resultado (área verde).")
         else:
             self._set_status(f"{titulo}: sin interseccion, los poligonos no se solapan.")
         self._redibujar()
@@ -390,7 +374,7 @@ class DemoGreinerHormann:
         self._set_status("Lienzo limpio. Elige un ejemplo o presiona 'Dibujar Sujeto'.")
         self._redibujar()
 
-    # ---------------- Clics sobre el lienzo ----------------
+    #  Clics sobre el lienzo 
     def _on_click(self, event):
         if event.inaxes != self.ax or self.modo is None:
             return
@@ -408,7 +392,7 @@ class DemoGreinerHormann:
 
         self._redibujar()
 
-    # ---------------- Redibujado del lienzo ----------------
+    #  Redibujado del lienzo 
     def _redibujar(self):
         self.ax.clear()
         self.ax.set_xlim(-1, 10)
